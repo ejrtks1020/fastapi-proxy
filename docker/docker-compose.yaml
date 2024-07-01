@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  proxy_server:
+    image: proxy_server
+    container_name: "proxy_server"
+    volumes:
+      - ../proxy_server:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - "fast_network"
+
+
+  db:
+    image: mariadb:11.1
+    ports:
+      - 3304:3306
+    # volumes:
+    #   - ./db/conf.d:/etc/mysql/mariadb.conf.d # mariadb 설정 파일
+    #   - ./db/data:/var/lib/mysql # data dir
+    #   - ./db/initdb.d:/docker-entrypoint-initdb.d
+    # env_file: .env
+    environment:
+      TZ: Asia/Seoul
+      MARIADB_USER: knh
+      MARIADB_PASSWORD: knh!
+      MARIADB_ROOT_PASSWORD: knh1!
+      MARIADB_DATABASE: knh
+    networks:
+      - "fast_network"
+    restart: always
+
+networks:
+  fast_network:
+    driver: bridge
